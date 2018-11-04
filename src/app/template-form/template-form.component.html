@@ -1,3 +1,19 @@
-<p>
-  template-form works!
-</p>
+<h5>Form - Template Driven</h5>
+<hr>
+<form #f="ngForm" (ngSubmit)="onSubmit(f)">
+
+  <div class="form-group">
+    <label for="nome">Nome</label>
+    <input type="email" class="form-control" id="nome" name="nome" placeholder="Nome" 
+      [(ngModel)]="usuario.nome">    
+  </div>
+  
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" id="email" name="email" placeholder="nome@email.com" 
+      [(ngModel)]="usuario.email">
+  </div>
+  
+  <button type="submit" class="btn btn-primary">Submit</button>
+  
+</form>
