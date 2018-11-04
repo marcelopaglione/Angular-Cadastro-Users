@@ -38,8 +38,57 @@ export class DataFormComponent implements OnInit {
     });
   }
 
+  consultaCEP() {
+    let cep = this.formulario.get('endereco.cep').value;
+
+    //Remove o que não é dígito
+    cep = cep.replace(/\D/g, '');
+
+    if (cep != "") {
+      //Expressão regular para validar o CEP
+      var validacep = /^[0-9]{8}$/;
+
+      //Valida o formato do CEP
+      if (validacep.test(cep)) {
+
+        this.resetaFormulario();
+
+        this.http.get(`//viacep.com.br/ws/${cep}/json`)
+          .pipe(map(dados => dados.json()))
+          .subscribe(dados => {
+            this.populaDadosForm(dados)
+          });
+      }
+
+    }
+  }
+
+  populaDadosForm(dados) {
+    this.formulario.patchValue({
+      endereco: {
+        rua: dados.logradouro,
+        complemento: dados.complemento,
+        bairro: dados.bairro,
+        cidade: dados.localidade,
+        estado: dados.uf
+      }
+    });
+  }
+
+  resetaFormulario() {
+    this.formulario.patchValue({
+      endereco: {
+        rua: null,
+        complemento: null,
+        bairro: null,
+        cidade: null,
+        estado: null
+      }
+    });
+  }
+
   verificaValidTouched(campo: string) {
-      return !this.formulario.get(campo).valid && this.formulario.get(campo).touched;
+    return !this.formulario.get(campo).valid && this.formulario.get(campo).touched;
   }
 
   verificaEmailInvalid() {
@@ -60,14 +109,29 @@ export class DataFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.http.post('https://httpbin.org/post', JSON.stringify(this.formulario.value))
-      .pipe(map(res => res))
-      .subscribe(dados => {
-        //reseta o form
-        this.resetar();
-        console.log(dados)
-      }, (error: any) => alert('erro')
-      );
+    if (this.formulario.valid) {
+      this.http.post('https://httpbin.org/post', JSON.stringify(this.formulario.value))
+        .pipe(map(res => res))
+        .subscribe(dados => {
+          //reseta o form
+          this.resetar();
+          console.log(dados)
+        }, (error: any) => alert('erro')
+        );
+    }
+    else {
+      this.verificaValidacoesForm(this.formulario);
+    }
+  }
+
+  verificaValidacoesForm(form: FormGroup){
+    Object.keys(form.controls).forEach(campo => {
+      const controle = form.get(campo);
+      controle.markAsTouched();
+      if(controle instanceof FormGroup){
+        this.verificaValidacoesForm(controle);
+      }
+    });
   }
 
 
