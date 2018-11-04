@@ -24,8 +24,8 @@
       <div class="form-group col-md-3">
         <label for="cep" class="control-label">CEP</label>
         <input type="text" class="form-control" [ngClass]="aplicaCssErro(cep)" id="cep" name="cep" ngModel required
-          #cep="ngModel">
-        <app-campo-control-erro class="invalid-feedback" [mostrarErro]="verificaValidTouched(cep)" msgErro="CEP é obrigatório."></app-campo-control-erro>
+          #cep="ngModel" (blur)="consultaCEP($event.target.value, f)">
+          <app-campo-control-erro class="invalid-feedback" [mostrarErro]="verificaValidTouched(cep)" msgErro="CEP é obrigatório."></app-campo-control-erro>          
       </div>
 
       <div class="form-group col-md-3">
@@ -37,14 +37,14 @@
 
       <div class="form-group col-md-6">
         <label for="complemento" class="control-label">Complemento</label>
-        <input type="text" class="form-control" id="complemento" name="complemento" ngModel required #complement="ngModel">
+        <input type="text" class="form-control" id="complemento" name="complemento" ngModel #complement="ngModel">
       </div>
     </div>
 
     <div class="form-group">
       <label class="control-label" for="rua">Rua</label>
       <input class="form-control" [ngClass]="aplicaCssErro(rua)" type="text" id="rua" name="rua" placeholder="Rua"
-        [(ngModel)]="usuario.rua" required #rua="ngModel" #localNomeDebug>
+        ngModel required #rua="ngModel" #localNomeDebug>
       <app-campo-control-erro class="invalid-feedback" [mostrarErro]="verificaValidTouched(rua)" msgErro="Rua é obrigatório."></app-campo-control-erro>
     </div>
 
