@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TemplateFormDebugComponent } from './template-form-debug/template-form-debug.component';
 import { CampoControlErroComponent } from './campo-control-erro/campo-control-erro.component';
+import { DropdownService } from './services/dropdown.service';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -9,11 +11,15 @@ import { CampoControlErroComponent } from './campo-control-erro/campo-control-er
     CampoControlErroComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    HttpModule
   ],
   exports:[
     TemplateFormDebugComponent,
     CampoControlErroComponent
+  ],
+  providers:[
+    DropdownService
   ]
 })
 export class SharedModule { }
