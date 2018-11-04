@@ -21,9 +21,9 @@ export class TemplateFormComponent implements OnInit {
   constructor(private http: Http) { }
 
   onSubmit(form) {
-    console.log(form);
-    console.log(form.value);
-    console.log(this.usuario);
+    this.http.post('https://httpbin.org/post',JSON.stringify(form.value))
+      .pipe(map(res => res))
+      .subscribe(dados => console.log(dados));
   }
 
   ngOnInit() {
