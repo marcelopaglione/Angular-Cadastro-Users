@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { map } from "rxjs/operators";
 import { FormGroup, NgForm } from '@angular/forms';
+import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 
 @Component({
   selector: 'app-template-form',
@@ -14,14 +15,17 @@ export class TemplateFormComponent implements OnInit {
   cepEncontrado: boolean = false;
 
   usuario: any = {
-    nome: 'Marcelo Ortiz Paglione Junior',
-    email: 'Marcelo.Paglione@gmail.com'
+    nome: null,
+    email: null
   }
 
-  constructor(private http: Http) { }
+  constructor(
+    private http: Http,
+    private cepService: ConsultaCepService
+  ) { }
 
   onSubmit(form) {
-    this.http.post('https://httpbin.org/post',JSON.stringify(form.value))
+    this.http.post('https://httpbin.org/post', JSON.stringify(form.value))
       .pipe(map(res => res))
       .subscribe(dados => console.log(dados));
   }
@@ -42,30 +46,17 @@ export class TemplateFormComponent implements OnInit {
 
   consultaCEP(cep, form) {
     console.log(cep);
+    if (cep != null && cep !== '') {
 
-    //Remove o que não é dígito
-    var cep = cep.replace(/\D/g, '');
-
-    if (cep != "") {
-      //Expressão regular para validar o CEP
-      var validacep = /^[0-9]{8}$/;
-
-      //Valida o formato do CEP
-      if (validacep.test(cep)) {
-
-        this.resetaFormulario(form);
-
-        this.http.get(`//viacep.com.br/ws/${cep}/json`)
-          .pipe(map(dados => dados.json()))
-          .subscribe(dados => {            
-            this.populaDadosForm(dados, form)
-          });
-      }
-
+      this.resetaFormulario(form);
+      this.cepService.consultaCEP(cep)
+        .subscribe(dados => {
+          this.populaDadosForm(dados, form)
+        });
     }
   }
 
-  populaDadosForm(dados, formulario:NgForm) {         
+  populaDadosForm(dados, formulario: NgForm) {
     formulario.form.patchValue({
       endereco: {
         rua: dados.logradouro,
@@ -77,7 +68,7 @@ export class TemplateFormComponent implements OnInit {
     });
   }
 
-  resetaFormulario(formulario:NgForm){
+  resetaFormulario(formulario: NgForm) {
     formulario.form.patchValue({
       endereco: {
         rua: null,

@@ -4,6 +4,7 @@ import { TemplateFormDebugComponent } from './template-form-debug/template-form-
 import { CampoControlErroComponent } from './campo-control-erro/campo-control-erro.component';
 import { DropdownService } from './services/dropdown.service';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { HttpModule } from '@angular/http';
   ],
   imports: [
     CommonModule,
-    HttpModule
+    HttpModule,
+    HttpClientModule
   ],
   exports:[
     TemplateFormDebugComponent,

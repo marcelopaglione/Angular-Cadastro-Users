@@ -4,6 +4,7 @@ import { Http } from '@angular/http';
 import { map } from "rxjs/operators";
 import { DropdownService } from '../shared/services/dropdown.service';
 import { EstadoBr } from '../shared/models/estado-br.model';
+import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 
 @Component({
   selector: 'app-data-form',
@@ -18,17 +19,14 @@ export class DataFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private http: Http,
-    private dropdownService: DropdownService
+    private dropdownService: DropdownService,
+    private cepService: ConsultaCepService
   ) { }
 
   ngOnInit() {
 
     this.dropdownService.getEstadosBr().
-    subscribe(dados => {this.estados = dados;})
-    /*this.formulario = new FormGroup({
-      nome: new FormControl(null),
-      email: new FormControl(null)
-    });*/
+      subscribe(dados => { this.estados = dados; })
 
     this.formulario = this.formBuilder.group({
       nome: [null, [Validators.required, Validators.min(3), Validators.max(25)]],
@@ -48,25 +46,12 @@ export class DataFormComponent implements OnInit {
   consultaCEP() {
     let cep = this.formulario.get('endereco.cep').value;
 
-    //Remove o que não é dígito
-    cep = cep.replace(/\D/g, '');
-
-    if (cep != "") {
-      //Expressão regular para validar o CEP
-      var validacep = /^[0-9]{8}$/;
-
-      //Valida o formato do CEP
-      if (validacep.test(cep)) {
-
-        this.resetaFormulario();
-
-        this.http.get(`//viacep.com.br/ws/${cep}/json`)
-          .pipe(map(dados => dados.json()))
-          .subscribe(dados => {
-            this.populaDadosForm(dados)
-          });
-      }
-
+    if (cep != null && cep !== '') {
+      this.resetaFormulario();
+      this.cepService.consultaCEP(cep)
+        .subscribe(dados => {
+          this.populaDadosForm(dados)
+        });
     }
   }
 
@@ -131,11 +116,11 @@ export class DataFormComponent implements OnInit {
     }
   }
 
-  verificaValidacoesForm(form: FormGroup){
+  verificaValidacoesForm(form: FormGroup) {
     Object.keys(form.controls).forEach(campo => {
       const controle = form.get(campo);
       controle.markAsTouched();
-      if(controle instanceof FormGroup){
+      if (controle instanceof FormGroup) {
         this.verificaValidacoesForm(controle);
       }
     });
