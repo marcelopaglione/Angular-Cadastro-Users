@@ -2,28 +2,47 @@
 <hr>
 <form #f="ngForm" (ngSubmit)="onSubmit(f)">
 
-  <div class="form-group">
-    <label for="nome">Nome</label>
-    <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" 
-      [(ngModel)]="usuario.nome"
-      required #nome>    
+  <div 
+    class="form-group" [class.is-invalid]="!nome.valid && nome.touched">
+    <label class="control-label" [class.is-invalid]="!nome.valid && nome.touched" for="nome">
+      Nome
+    </label>
+    <input       
+      class="form-control" [class.is-invalid]="!nome.valid && nome.touched"
+      type="text" id="nome" name="nome" placeholder="Nome" 
+      [(ngModel)]="usuario.nome" 
+      required #nome="ngModel" #localNomeDebug>    
       
+      <div class="invalid-feedback">
+        Nome é obrigatório!
+      </div>
+
       <div [hidden]="!hidden" class="debug">
-        {{ nome.className }}
+        {{ localNomeDebug.className }}
       </div>
   </div>
   
-  <div class="form-group">
+  <div class="form-group" [class.is-invalid]="!email.valid && email.touched">
     <label for="email">Email</label>
-    <input type="email" class="form-control" id="email" name="email" placeholder="nome@email.com" 
+    <input class="form-control" [class.is-invalid]="!email.valid && email.touched"
+      type="email" id="email" name="email" placeholder="nome@email.com" 
       [(ngModel)]="usuario.email"
-      required email #email>
+      required email #email="ngModel" #localEmailDebug>
       
+      <div class="invalid-feedback">
+        Email inválido!
+      </div>
+
       <div [hidden]="!hidden" class="debug">
-        {{ email.className }}
+        {{ localEmailDebug.className }}
       </div>
   </div>
   
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary"
+    [disabled]="!f.valid">
+    Salvar
+  </button>
   
 </form>
+
+<app-template-form-debug [form]="f"></app-template-form-debug>

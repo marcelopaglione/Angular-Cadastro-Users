@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TemplateFormComponent implements OnInit {
  
-  hidden: boolean = true;
+  hidden: boolean = false;
 
   usuario: any = {
     nome: 'Marcelo Ortiz Paglione Junior',

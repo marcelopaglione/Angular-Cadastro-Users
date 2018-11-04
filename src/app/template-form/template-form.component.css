@@ -1,3 +1,7 @@
-.ng-invalid.ng-touched:not(form) {
+/*.ng-invalid.ng-touched:not(form) {
     border: 1px solid red;
+}*/
+
+.alertaEspacamento{
+    margin-top: 2px;
 }
