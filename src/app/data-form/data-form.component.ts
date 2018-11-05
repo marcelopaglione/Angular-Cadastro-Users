@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Http } from '@angular/http';
-import { map } from "rxjs/operators";
+import { map } from 'rxjs/operators';
 import { DropdownService } from '../shared/services/dropdown.service';
 import { EstadoBr } from '../shared/models/estado-br.model';
 import { ConsultaCepService } from '../shared/services/consulta-cep.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-data-form',
@@ -14,7 +15,8 @@ import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 export class DataFormComponent implements OnInit {
 
   formulario: FormGroup;
-  estados: EstadoBr;
+  // estados: EstadoBr[];
+  estados: Observable<EstadoBr>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,9 +26,9 @@ export class DataFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
-    this.dropdownService.getEstadosBr().
-      subscribe(dados => { this.estados = dados; })
+    this.estados = this.dropdownService.getEstadosBr();
+    // this.dropdownService.getEstadosBr().
+    // subscribe(dados => { this.estados = dados; })
 
     this.formulario = this.formBuilder.group({
       nome: [null, [Validators.required, Validators.min(3), Validators.max(25)]],
@@ -44,13 +46,13 @@ export class DataFormComponent implements OnInit {
   }
 
   consultaCEP() {
-    let cep = this.formulario.get('endereco.cep').value;
+    const cep = this.formulario.get('endereco.cep').value;
 
     if (cep != null && cep !== '') {
       this.resetaFormulario();
       this.cepService.consultaCEP(cep)
         .subscribe(dados => {
-          this.populaDadosForm(dados)
+          this.populaDadosForm(dados);
         });
     }
   }
@@ -84,7 +86,7 @@ export class DataFormComponent implements OnInit {
   }
 
   verificaEmailInvalid() {
-    let campoEmail = this.formulario.get('email');
+    const campoEmail = this.formulario.get('email');
     if (campoEmail.errors) {
       return campoEmail.errors['email'];
     }
@@ -93,7 +95,7 @@ export class DataFormComponent implements OnInit {
   aplicaCssErro(campo: string) {
     return {
       'is-invalid': this.verificaValidTouched(campo)
-    }
+    };
   }
 
   resetar() {
@@ -105,13 +107,12 @@ export class DataFormComponent implements OnInit {
       this.http.post('https://httpbin.org/post', JSON.stringify(this.formulario.value))
         .pipe(map(res => res))
         .subscribe(dados => {
-          //reseta o form
+          // reseta o form
           this.resetar();
-          console.log(dados)
+          console.log(dados);
         }, (error: any) => alert('erro')
         );
-    }
-    else {
+    } else {
       this.verificaValidacoesForm(this.formulario);
     }
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { map } from "rxjs/operators";
+import { map } from 'rxjs/operators';
 import { FormGroup, NgForm } from '@angular/forms';
 import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 
@@ -11,13 +11,13 @@ import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 })
 export class TemplateFormComponent implements OnInit {
 
-  hidden: boolean = false;
-  cepEncontrado: boolean = false;
+  hidden = false;
+  cepEncontrado = false;
 
   usuario: any = {
     nome: null,
     email: null
-  }
+  };
 
   constructor(
     private http: Http,
@@ -34,14 +34,14 @@ export class TemplateFormComponent implements OnInit {
   }
 
   verificaValidTouched(campo) {
-    //console.log("VerificaValid Touched from "+campo+": "+!campo.valid && campo.touched);
+    // console.log("VerificaValid Touched from "+campo+": "+!campo.valid && campo.touched);
     return !campo.valid && campo.touched;
   }
 
   aplicaCssErro(campo) {
     return {
       'is-invalid': this.verificaValidTouched(campo)
-    }
+    };
   }
 
   consultaCEP(cep, form) {
@@ -51,7 +51,7 @@ export class TemplateFormComponent implements OnInit {
       this.resetaFormulario(form);
       this.cepService.consultaCEP(cep)
         .subscribe(dados => {
-          this.populaDadosForm(dados, form)
+          this.populaDadosForm(dados, form);
         });
     }
   }

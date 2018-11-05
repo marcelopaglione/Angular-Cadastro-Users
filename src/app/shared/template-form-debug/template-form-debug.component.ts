@@ -9,7 +9,7 @@ export class TemplateFormDebugComponent implements OnInit {
 
   constructor() { }
 
-  @Input() form;  
+  @Input() form;
 
   ngOnInit() {
   }

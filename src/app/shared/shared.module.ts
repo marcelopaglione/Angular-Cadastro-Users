@@ -16,11 +16,11 @@ import { HttpClientModule } from '@angular/common/http';
     HttpModule,
     HttpClientModule
   ],
-  exports:[
+  exports: [
     TemplateFormDebugComponent,
     CampoControlErroComponent
   ],
-  providers:[
+  providers: [
     DropdownService
   ]
 })
