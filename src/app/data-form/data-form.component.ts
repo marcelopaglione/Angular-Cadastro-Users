@@ -6,6 +6,7 @@ import { DropdownService } from '../shared/services/dropdown.service';
 import { EstadoBr } from '../shared/models/estado-br.model';
 import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 import { Observable } from 'rxjs';
+import { Headers } from '@angular/http';
 
 @Component({
   selector: 'app-data-form',
@@ -104,13 +105,18 @@ export class DataFormComponent implements OnInit {
 
   onSubmit() {
     if (this.formulario.valid) {
-      this.http.post('https://httpbin.org/post', JSON.stringify(this.formulario.value))
+      // for testing post methods => https://httpbin.org/post
+      const jsonBody = JSON.stringify(this.formulario.value);
+      const header = new Headers();
+      header.append('Content-Type', 'application/json');
+
+      this.http.post('http://localhost:8080/api/user', jsonBody, { headers: header})
         .pipe(map(res => res))
         .subscribe(dados => {
           // reseta o form
           this.resetar();
           console.log(dados);
-        }, (error: any) => alert('erro')
+        }, (error: any) => alert('erro' + error)
         );
     } else {
       this.verificaValidacoesForm(this.formulario);
